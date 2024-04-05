@@ -1,0 +1,233 @@
+﻿<UserControl
+    x:Class="Typogenetics.Views.GameView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Typogenetics.Views.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Typogenetics.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    d:DataContext="{x:Type local:GameVm}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:NewItemPlaceholderConverter x:Key="NewItemPlaceholderConverter" />
+    </UserControl.Resources>
+    <Grid x:Name="Root">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DataGrid
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="3"
+            AutoGenerateColumns="False"
+            CanUserAddRows="True"
+            ItemsSource="{Binding Strands}"
+            SelectedItem="{Binding SelectedStrand, Mode=TwoWay, Converter={StaticResource NewItemPlaceholderConverter}}"
+            SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="*" Header="Strand">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Margin="3,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding Data}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox
+                                Margin="3"
+                                Padding="3"
+                                CharacterCasing="Upper"
+                                PreviewKeyDown="GattacaKeyDown"
+                                Text="{Binding Data, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn
+                    Width="Auto"
+                    Header="X"
+                    IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                Margin="3"
+                                Padding="3"
+                                Command="{Binding ElementName=Root, Path=DataContext.RemoveStrand}"
+                                CommandParameter="{Binding}"
+                                Content="x" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid
+            Grid.Row="0"
+            Grid.Column="2"
+            Margin="3"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            ItemsSource="{Binding Enzymes}"
+            SelectedItem="{Binding SelectedEnzyme, Mode=TwoWay, Converter={StaticResource NewItemPlaceholderConverter}}"
+            SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Name}"
+                    IsReadOnly="True" />
+                <DataGridTemplateColumn
+                    Width="Auto"
+                    Header="X"
+                    IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button
+                                Margin="3"
+                                Padding="3"
+                                Command="{Binding ElementName=Root, Path=DataContext.RemoveEnzyme}"
+                                CommandParameter="{Binding}"
+                                Content="x" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Button
+                Grid.Row="1"
+                Margin="3"
+                Padding="3"
+                Command="{Binding RibosomeSingle}"
+                Content="=&gt; Ribosome =&gt;" />
+            <Button
+                Grid.Row="2"
+                Margin="3"
+                Padding="3"
+                Command="{Binding RibosomeAll}"
+                Content="=&gt; Ribosome All =&gt;" />
+            <Button
+                Grid.Row="3"
+                Margin="3"
+                Padding="3"
+                Command="{Binding Process}"
+                Content="&lt;= Process &lt;=" />
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="3"
+                Padding="3"
+                Command="{Binding ClearStrands}"
+                Content="Clear" />
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="3"
+                Padding="3"
+                Command="{Binding ClearEnzymes}"
+                Content="Clear" />
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="3"
+                Padding="3"
+                Command="{Binding RemoveDuplicateStrands}"
+                Content="Remove duplicate strands" />
+            <CheckBox
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="3"
+                VerticalAlignment="Center"
+                Content="Auto"
+                IsChecked="{Binding AutoRemoveDuplicateStrands, Mode=TwoWay}" />
+            <Button
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="3"
+                Padding="3"
+                Command="{Binding RemoveShortStrands}"
+                Content="Remove short strands" />
+            <CheckBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="3"
+                VerticalAlignment="Center"
+                Content="Auto"
+                IsChecked="{Binding AutoRemoveShortStrands, Mode=TwoWay}" />
+        </Grid>
+        <Grid Grid.Row="2" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                Margin="3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Text="Initial binding mode:" />
+            <ComboBox
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="3"
+                ItemsSource="{Binding InitialBindingSelectionModes}"
+                SelectedItem="{Binding InitialBindingSelectionMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="0"
+                Margin="3"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Text="N:" />
+            <xctk:IntegerUpDown
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="3"
+                IsEnabled="{Binding IsInitialBindingNEditable}"
+                Minimum="1"
+                Value="{Binding InitialBindingN, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
+    </Grid>
+</UserControl>
